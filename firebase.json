@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "motoflash-pedido",
     "target": "pedido",
     "public": "build",
     "ignore": [
