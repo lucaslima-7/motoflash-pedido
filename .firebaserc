@@ -1,5 +1,21 @@
 {
   "projects": {
-    "default": "motoflash-pedido"
+    "default": "motoflash-a2f12"
+  },
+  "targets": {
+    "motoflash-pedido": {
+      "hosting": {
+        "pedido": [
+          "motoflash-pedido.web.app"
+        ]
+      }
+    },
+    "motoflash-a2f12": {
+      "hosting": {
+        "pedido": [
+          "motoflash-pedido.web.app"
+        ]
+      }
+    }
   }
 }

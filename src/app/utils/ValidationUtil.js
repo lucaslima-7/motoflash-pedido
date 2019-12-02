@@ -41,6 +41,7 @@ export function transformAddressGoogle(place) {
         }
     }
     let location = {
+        geohash: "ABC",
         geopoint: {
             latitude: place.geometry.location.lat(),
             longitude: place.geometry.location.lng()
