@@ -8,6 +8,7 @@ import defaultTheme from "../app/config/themes/defaultTheme";
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider, StylesProvider, jssPreset, createGenerateClassName } from '@material-ui/styles';
 import Authorization from 'app/auth/Authorization';
+import MessageAlert from './main/components/snackbar/MessageAlert';
 
 const jss = create({
   ...jssPreset(),
@@ -23,6 +24,7 @@ const App = () => (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <Authorization>
+          <MessageAlert />
           <Routes />
         </Authorization>
       </Provider>

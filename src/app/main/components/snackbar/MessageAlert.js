@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Actions from 'app/store/actions';
 import clsx from 'clsx';
 import { Snackbar, SnackbarContent, withStyles, IconButton, Slide } from '@material-ui/core'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -64,7 +66,11 @@ const ContentWrapper = ({ classes, className, message, onClose, variant, ...othe
   );
 }
 
-const MessageAlert = ({ variant, message, showTopCenterDialog, setMessageOpen }) => {
+const MessageAlert = ({  }) => {
+  const dispatch = useDispatch();
+  const options = useSelector(({ ui }) => ui)
+
+
   return (
     <Snackbar
       anchorOrigin={{
@@ -72,15 +78,15 @@ const MessageAlert = ({ variant, message, showTopCenterDialog, setMessageOpen })
         horizontal: 'center',
       }}
       TransitionComponent={<Slide direction="down" />}
-      open={showTopCenterDialog}
-      onRequestClose={() => setMessageOpen(false)}
+      open={options.showDialog}
+      onRequestClose={() => dispatch(Actions.clearMessageDialog())}
       autoHideDuration={3000}
-      onClose={() => setMessageOpen(false)}
+      onClose={() => dispatch(Actions.clearMessageDialog())}
     >
       <ContentWrapper
-        onClose={() => setMessageOpen(false)}
-        variant={variant}
-        message={message}
+        onClose={() => dispatch(Actions.clearMessageDialog())}
+        variant={option.dialogType}
+        message={option.dialogMessage}
       />
     </Snackbar>
   )

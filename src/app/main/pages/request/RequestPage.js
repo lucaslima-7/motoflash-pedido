@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import * as Actions from 'app/store/actions';
 import {
   Grid,
   Typography,
@@ -18,6 +20,7 @@ import { faClock, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import ApiWorkOrders from 'app/api/ApiWorkOrder';
 import NumberUtil from 'app/utils/NumberUtil';
 import history from "@history";
+import MessageAlert from 'app/main/components/snackbar/MessageAlert';
 
 const styles = () => ({
   panelOppened: {
@@ -49,9 +52,10 @@ const styles = () => ({
 })
 
 const RequestPage = ({ classes }) => {
-  let inputPlacesGoogle = useRef(null);
-  const user = JSON.parse(localStorage.getItem('user'))
+  const dispatch = useDispatch()
+  const inputPlacesGoogle = useRef(null);
   const { REACT_APP_MAP_KEY } = process.env;
+  const user = JSON.parse(localStorage.getItem('user'))
   const mapKey = `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_MAP_KEY}
   &v=3.exp&libraries=geometry,drawing,places`;
   const [loading, setLoading] = useState(false)
@@ -135,9 +139,10 @@ const RequestPage = ({ classes }) => {
     }
     try {
       const { data } = await new ApiWorkOrders().getQuotation(options)
+      dispatch(Actions.showMessageDialog('success', 'Este é o valor da sua corrida! :)'))
       setQuotation(data.quotation)
     } catch (error) {
-      console.log(error)
+      dispatch(Actions.showMessageDialog('error', 'Ocorreu um erro ao calcular o valor da corrida, tente novamente!'))
     } finally {
       setLoading(false)
     }
@@ -397,6 +402,7 @@ const RequestPage = ({ classes }) => {
           </Grid>
         </Grid>
       </Grid>
+      <MessageAlert handleMessageAlert={handleMessageAlert} />
     </Layout>
   );
 }
