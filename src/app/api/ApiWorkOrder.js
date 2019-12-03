@@ -11,4 +11,15 @@ export default class ApiWorkOrders extends ApiConfig {
     const url = `/quotation`
     return post(this.baseUrl, url, config)
   }
+
+  addWorkOrder(options) {
+    const config = {
+      data: {
+        ...options
+      }
+    }
+    const url = `/workOrders`
+    return post(this.baseUrl, url, config)
+  }
+
 }

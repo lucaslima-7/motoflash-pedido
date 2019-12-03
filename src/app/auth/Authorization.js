@@ -16,14 +16,20 @@ class Authorization extends Component {
 
     firebaseService.onAuthStateChanged(authUser => {
       if (authUser) {
+        console.log(authUser)
         const user = {
           uid: authUser.uid,
           role: "admin",
           displayName: authUser.displayName ? authUser.displayName : "User",
           email: authUser.email,
-          profilePic: "/assets/images/avatar/profile.jpg"
+          phoneNumber: authUser.phoneNumber ? authUser.phoneNumber : "",
+          profilePic: authUser.photoURL ? authUser.photoURL : "/assets/images/avatar/profile.jpg",
+          accessToken: authUser.ma ? authUser.ma : "",
+          refreshToken: authUser.refreshToken ? authUser.refreshToken : "",
         }
-        localStorage.setItem('user', JSON.stringify(authUser))
+        if (!localStorage.getItem('user')) {
+          localStorage.setItem('user', JSON.stringify(user))
+        }
         this.props.setUserData(user)
         history.push('/solicitar')
         // TODO Snackbar Logando...

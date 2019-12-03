@@ -33,6 +33,7 @@ let count = 0
 
 const WorkOrdersPage = ({ classes, history }) => {
   const db = firestore()
+  const user = JSON.parse(localStorage.getItem('user'))
   const refCustomTable = useRef()
   const [selectedStatus, setSelectedStatus] = useState("")
   const newStatusList = ["AVAILABLE", "CANCELED"]
@@ -46,7 +47,7 @@ const WorkOrdersPage = ({ classes, history }) => {
   const getAllWorkOrders = ({ limit, type, page }) => {
     if (type === "prev") {
       return new Promise(async (resolve, reject) => {
-        const countRef = db.collection("workOrders").orderBy("createdDate").startAt(first[page]).limit(limit)
+        const countRef = db.collection("workorders").where("userId", "==", user.uid).orderBy("createdDate").startAt(first[page]).limit(limit)
         const snapshot = await countRef.get()
         last[page] = snapshot.docs[snapshot.docs.length - 1]
         first[page] = snapshot.docs[0]
@@ -62,7 +63,7 @@ const WorkOrdersPage = ({ classes, history }) => {
       if (last[page - 1]) {
         temp = last[page - 1]
       }
-      const countRef = db.collection("workOrders").orderBy("createdDate").startAfter(temp).limit(limit)
+      const countRef = db.collection("workorders").where("userId", "==", user.uid).orderBy("createdDate").startAfter(temp).limit(limit)
       const snapshot = await countRef.get()
       last[page] = snapshot.docs[snapshot.docs.length - 1]
       first[page] = snapshot.docs[0]
@@ -92,9 +93,10 @@ const WorkOrdersPage = ({ classes, history }) => {
   }
 
   const getAllWorkOrdersCount = async () => {
-    const workOrdersCollection = db.collection("metadatas").doc("workOrders")
+    const workOrdersCollection = db.collection("workorders").where("userId", "==", user.uid)
     const snap = await workOrdersCollection.get()
-    count = snap.data().count
+    count = snap.docs.map(doc => doc.data()).length
+    console.log(count)
   }
 
   const handleType = query => {
@@ -151,7 +153,7 @@ const WorkOrdersPage = ({ classes, history }) => {
       <Grid container justify="center">
         <Grid item xs={12} className={"px-24 py-4"}>
           <Typography className={"text-left mt-12 font-900"} variant={"h4"}>
-            Corridas
+            Meus Pedidos
           </Typography>
         </Grid>
         <Grid item xs={12} className={"mb-24 mx-12"}>
@@ -182,39 +184,11 @@ const WorkOrdersPage = ({ classes, history }) => {
             config={workOrdersTableConfig}
             filterChips={filterChips}
             showDateFilter={false}
-            onRowClick={(e, rowData) => history.push('workOrders/' + rowData.id)}
+            onRowClick={(e, rowData) => console.log(rowData)}
           />
         </Grid>
-        {/* <Grid item xs={2} className="px-12">
-        <Card className={clsx("bg-green-100 text-right", classes.panel)}>
-          <CardContent>
-            <Grid container justify="space-between" alignItems="center">
-              <Grid item xs={3}>
-                <FontAwesomeIcon icon={faUserCheck} className="text-28" />
-              </Grid>
-              <Grid item xs={9}>
-                <Typography variant="h6">Ativos</Typography>
-                <Typography variant="h6">292</Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-        <Card className={clsx("bg-red-100 mt-12 text-right", classes.panel)}>
-          <CardContent>
-            <Grid container justify="space-between" alignItems="center">
-              <Grid item xs={3}>
-                <FontAwesomeIcon icon={faUserTimes} className="text-28" />
-              </Grid>
-              <Grid item xs={9}>
-                <Typography variant="h6">Inativos</Typography>
-                <Typography variant="h6">271</Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid> */}
       </Grid>
-    </Layout >
+    </Layout>
   );
 }
 

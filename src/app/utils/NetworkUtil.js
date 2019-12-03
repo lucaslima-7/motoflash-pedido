@@ -8,7 +8,7 @@ export function request(baseURL, method, url, config = {}, options = {}) {
   // non-axios specific params
   const { suppressAuth } = options;
   const user = JSON.parse(localStorage.getItem('user'))
-  const userToken = user.stsTokenManager.accessToken
+  const userToken = user.accessToken
 
   return new Promise((resolve, reject) => {
     axios({

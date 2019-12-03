@@ -16,6 +16,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faRoad } from '@fortawesome/free-solid-svg-icons';
 import { faClock, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import ApiWorkOrders from 'app/api/ApiWorkOrder';
+import NumberUtil from 'app/utils/NumberUtil';
+import history from "@history";
 
 const styles = () => ({
   panelOppened: {
@@ -47,6 +49,8 @@ const styles = () => ({
 })
 
 const RequestPage = ({ classes }) => {
+  let inputPlacesGoogle = useRef(null);
+  const user = JSON.parse(localStorage.getItem('user'))
   const { REACT_APP_MAP_KEY } = process.env;
   const mapKey = `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_MAP_KEY}
   &v=3.exp&libraries=geometry,drawing,places`;
@@ -55,22 +59,22 @@ const RequestPage = ({ classes }) => {
     address: {
       address2: ""
     },
-    id: "",
-    sequence: 1
+    id: "xx1",
+    sequence: 1,
+    status: "PENDING"
   })
   const [collectDone, setCollectDone] = useState(false)
   const [delivery, setDeliveryPoint] = useState({
     address: {
       address2: ""
     },
-    id: "",
-    sequence: 2
+    id: "xx2",
+    sequence: 2,
+    status: "PENDING"
   })
   const [deliveryDone, setDeliveryDone] = useState(false)
   const [quotation, setQuotation] = useState(null)
   const [scriptLoaded, setScriptLoaded] = React.useState(false);
-
-  let inputPlacesGoogle = useRef(null);
 
   const selectNumber = (input, pos) => {
     console.log("Escolha o Numero")
@@ -130,8 +134,36 @@ const RequestPage = ({ classes }) => {
       ]
     }
     try {
-      const data = await new ApiWorkOrders().getQuotation(options)
-      console.log(data)
+      const { data } = await new ApiWorkOrders().getQuotation(options)
+      setQuotation(data.quotation)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const addWorkOrder = async () => {
+    setLoading(true)
+    const options = {
+      workOrder: {
+        userId: user.uid,
+        quotation: {
+          ...quotation
+        },
+        points: [
+          {
+            ...collect
+          },
+          {
+            ...delivery
+          }
+        ]
+      }
+    }
+    try {
+      await new ApiWorkOrders().addWorkOrder(options)
+      history.push('/pedidos')
     } catch (error) {
       console.log(error)
     } finally {
@@ -286,7 +318,7 @@ const RequestPage = ({ classes }) => {
             </Grid>
             {quotation ? (
               <>
-                <Grid item xs={12} className="p-24 text-center">
+                <Grid item xs={12} className="px-12 mt-36 text-center">
                   <Grid container>
                     <Grid item xs={12} sm={4}>
                       <Grid container alignItems="center">
@@ -298,7 +330,7 @@ const RequestPage = ({ classes }) => {
                             Preço
                           </Typography>
                           <Typography variant="body1" className="font-700">
-                            {`R$ ${quotation.priceFormatted}`}
+                            {`${NumberUtil.getDoubleAsCurrency(quotation.price)}`}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -313,7 +345,7 @@ const RequestPage = ({ classes }) => {
                             Tempo
                           </Typography>
                           <Typography variant="body1" className="font-700">
-                            {quotation.durationFormatted}
+                            {NumberUtil.secondsToMinutes(quotation.duration)}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -328,7 +360,7 @@ const RequestPage = ({ classes }) => {
                             Distância
                               </Typography>
                           <Typography variant="body1" className="font-700">
-                            {quotation.distanceFormatted}
+                            {NumberUtil.metersToKm(quotation.distance)}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -340,7 +372,7 @@ const RequestPage = ({ classes }) => {
                     size="small"
                     color="primary"
                     variant="contained"
-                    onClick={() => setCollectDone(true)}
+                    onClick={() => addWorkOrder()}
                   >
                     Confirmar Pedido
                   </Button>
