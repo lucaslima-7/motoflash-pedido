@@ -81,8 +81,7 @@ const RequestPage = ({ classes }) => {
   const [scriptLoaded, setScriptLoaded] = React.useState(false);
 
   const selectNumber = (input, pos) => {
-    console.log("Escolha o Numero")
-    // Snackbar alerta escolha o numero
+    dispatch(Actions.showMessageDialog('warning', 'Informe o número!'))
     input.focus();
     window.setTimeout(function () {
       input.setSelectionRange(pos + 2, pos + 8);
@@ -139,8 +138,8 @@ const RequestPage = ({ classes }) => {
     }
     try {
       const { data } = await new ApiWorkOrders().getQuotation(options)
-      dispatch(Actions.showMessageDialog('success', 'Este é o valor da sua corrida! :)'))
       setQuotation(data.quotation)
+      dispatch(Actions.showMessageDialog('success', 'Este é o valor da sua corrida! :)'))
     } catch (error) {
       dispatch(Actions.showMessageDialog('error', 'Ocorreu um erro ao calcular o valor da corrida, tente novamente!'))
     } finally {
@@ -168,9 +167,10 @@ const RequestPage = ({ classes }) => {
     }
     try {
       await new ApiWorkOrders().addWorkOrder(options)
+      dispatch(Actions.showMessageDialog('success', 'Corrida adicionada com sucesso!'))
       history.push('/pedidos')
     } catch (error) {
-      console.log(error)
+      dispatch(Actions.showMessageDialog('error', 'Ocorreu um erro ao adicionar a corrida, tente novamente!'))
     } finally {
       setLoading(false)
     }
@@ -189,7 +189,7 @@ const RequestPage = ({ classes }) => {
               <Typography variant="h6">Coleta</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Script url={mapKey} onLoad={() => { setScriptLoaded(true) }} />
+              <Script url={mapKey} onLoad={() => setScriptLoaded(true)} />
               {scriptLoaded && (
                 <Autocomplete
                   className={classes.outlinedButton}
@@ -402,7 +402,6 @@ const RequestPage = ({ classes }) => {
           </Grid>
         </Grid>
       </Grid>
-      <MessageAlert handleMessageAlert={handleMessageAlert} />
     </Layout>
   );
 }

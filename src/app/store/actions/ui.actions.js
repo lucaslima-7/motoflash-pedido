@@ -1,10 +1,10 @@
-export const OPEN_DIALOG = "@dialog/OPEN_DIALOG";
-export const CLOSE_DIALOG = "@dialog/CLOSE_DIALOG";
+export const SHOW_MESSAGE = "@snackbar/SHOW_MESSAGE";
+export const HIDE_MESSAGE = "@snackbar/HIDE_MESSAGE";
 
 export const showMessageDialog = (alertType, message) => {
   return dispatch => {
     dispatch({
-       type: "OPEN_DIALOG",
+       type: SHOW_MESSAGE,
        payload: {
          alertType,
          message
@@ -16,7 +16,7 @@ export const showMessageDialog = (alertType, message) => {
 export const clearMessageDialog = () => {
   return dispatch => {
     dispatch({
-      type: "CLOSE_DIALOG"
+      type: HIDE_MESSAGE
     })
   }
 }

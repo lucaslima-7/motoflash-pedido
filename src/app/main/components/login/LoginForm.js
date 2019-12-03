@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch } from 'react-redux';
+import * as Actions from 'app/store/actions';
 import { withRouter } from 'react-router-dom';
 import {
   Grid,
@@ -13,9 +15,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { faChevronRight, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import firebaseService from "app/config/firebase/index";
-import MessageAlert from "../snackbar/MessageAlert";
 
 const LoginForm = ({ history }) => {
+  const dispatch = useDispatch()
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loginData, setLoginData] = useState({
@@ -36,13 +38,12 @@ const LoginForm = ({ history }) => {
       firebaseService.auth.signInWithEmailAndPassword(email, password)
         .then((response) => {
           setLoading(false)
+          dispatch(Actions.showMessageDialog('info', 'Bem Vindo de Volta!'))
           history.push('/pedidos')
-          return (
-            <MessageAlert variant="success" message={"Login realizado com sucesso"} />
-          )
         })
         .catch(error => {
           console.log("Erro", error)
+          dispatch(Actions.showMessageDialog('error', 'Ocorreu um erro, tente novamente'))
           setLoading(false)
         });
   }
