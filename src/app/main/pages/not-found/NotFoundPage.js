@@ -13,7 +13,7 @@ function NotFoundPage() {
           </Typography>
         </Fade>
         <Fade delay={500}>
-          <Typography variant="h4" color="primary" className="mb-16">
+          <Typography variant="h4" className="mb-16">
             Parece que você foi além dos limites 😅
           </Typography>
         </Fade>

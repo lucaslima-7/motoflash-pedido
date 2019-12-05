@@ -1,7 +1,7 @@
 .pac-container {
-  border-bottom: 2px solid #ef3f40;
-  border-right: 2px solid #ef3f40;
-  border-left: 2px solid #ef3f40;
+  border-bottom: 2px solid #80D8FF;
+  border-right: 2px solid #80D8FF;
+  border-left: 2px solid #80D8FF;
   border-bottom-left-radius: 2%;
   border-bottom-right-radius: 2%;
   /* margin-left: 20px; */
@@ -21,14 +21,14 @@
     padding-bottom: 5px;
 }
 .pac-item:hover {
-  background: #ef3f40;
+  background: #82B1FF;
   color: #fff !important;
 }
 .pac-item:hover .pac-item-query{
     color:#fff
 }
 .pac-item-query {
-  color: #ef3f40;
+  color: #80D8FF;
 }
 /* .pac-item-query {
   color: #ef3f40;
@@ -50,5 +50,5 @@
 
 .autoCompleteInput :first-child:focus {
   padding: 200px;
-  border: 2px solid #ef3f40 !important;
+  border: 2px solid #80D8FF !important;
 }

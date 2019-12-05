@@ -8,6 +8,8 @@ import {
   TextField,
   Button,
   Divider,
+  Radio,
+  FormControlLabel
 } from "@material-ui/core";
 import Autocomplete from "react-google-autocomplete";
 import Script from "react-load-script";
@@ -20,7 +22,10 @@ import { faClock, faCheckCircle, faEdit, faTimesCircle } from '@fortawesome/free
 import ApiWorkOrders from 'app/api/ApiWorkOrder';
 import NumberUtil from 'app/utils/NumberUtil';
 import history from "@history";
+import clsx from 'clsx';
 import './autoComplete.css';
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
 
 const styles = () => ({
   panelOppened: {
@@ -48,6 +53,12 @@ const styles = () => ({
     margin: "0 auto",
     marginTop: 12,
     backgroundColor: "rgba(0, 0, 0, 0.25)",
+  },
+  buttonDelete: {
+    background: "#FF5252",
+    '&:hover':{ 
+      background: "#FF1744"
+    }
   }
 })
 
@@ -78,7 +89,9 @@ const RequestPage = ({ classes }) => {
   })
   const [deliveryDone, setDeliveryDone] = useState(false)
   const [quotation, setQuotation] = useState(null)
-  const [scriptLoaded, setScriptLoaded] = React.useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [noAddress2Collect, setNoAddress2Collect] = useState(false);
+  const [noAddress2Delivery, setNoAddress2Delivery] = useState(false);
 
   const selectNumber = (input, pos) => {
     dispatch(Actions.showMessageDialog('warning', 'Informe o número!'))
@@ -229,18 +242,38 @@ const RequestPage = ({ classes }) => {
                 />
               )}
             </Grid>
-            <Grid item xs={12} className="mt-8">
-              <TextField
-                label="Complemento"
-                fullWidth
-                variant="outlined"
-                disabled={collectDone}
-                margin="dense"
-                value={collect.address.address2}
-                onChange={e => setCollectPoint({
-                  ...collect, address: { ...collect.address, address2: e.target.value }
-                })}
-              />
+            <Grid container justify="space-between" alignItems="center" className="mt-8">
+                <Grid item xs={5}>
+                  <FormControlLabel
+                      control={
+                        <Radio
+                        disabled={collectDone}
+                        icon={<CircleUnchecked />}
+                        checkedIcon={<CircleCheckedFilled />}
+                        color={"primary"}
+                        checked={noAddress2Collect}
+                        onClick={() => setNoAddress2Collect(!noAddress2Collect)}
+                      />
+                      }
+                      label={
+                        <Typography variant="body2">Sem Complemento</Typography>
+                      }
+                      labelPlacement="end"
+                    />   
+                </Grid>
+                <Grid item xs={7}>
+                  <TextField
+                    label="Complemento"
+                    fullWidth
+                    variant="outlined"
+                    disabled={noAddress2Collect}
+                    margin="dense"
+                    value={collect.address.address2}
+                    onChange={e => setCollectPoint({
+                      ...collect, address: { ...collect.address, address2: e.target.value }
+                    })}
+                  />
+              </Grid>
             </Grid>
             <Grid item xs={12} className="mt-12 text-right">
               <Button
@@ -274,18 +307,38 @@ const RequestPage = ({ classes }) => {
                 />
               )}
             </Grid>
-            <Grid item xs={12} className="mt-8">
-              <TextField
-                label="Complemento"
-                fullWidth
-                variant="outlined"
-                disabled={deliveryDone}
-                margin="dense"
-                value={delivery.address.address2}
-                onChange={e => setDeliveryPoint({
-                  ...delivery, address: { ...delivery.address, address2: e.target.value }
-                })}
-              />
+            <Grid container justify="space-between" alignItems="center" className="mt-8">
+                <Grid item xs={5}>
+                  <FormControlLabel
+                      control={
+                        <Radio
+                        disabled={deliveryDone}
+                        icon={<CircleUnchecked />}
+                        checkedIcon={<CircleCheckedFilled />}
+                        color={"primary"}
+                        checked={noAddress2Delivery}
+                        onClick={() => setNoAddress2Delivery(!noAddress2Delivery)}
+                      />
+                      }
+                      label={
+                        <Typography variant="body2">Sem Complemento</Typography>
+                      }
+                      labelPlacement="end"
+                    />   
+                </Grid>
+                <Grid item xs={7}>
+                  <TextField
+                    label="Complemento"
+                    fullWidth
+                    variant="outlined"
+                    disabled={noAddress2Delivery}
+                    margin="dense"
+                    value={delivery.address.address2}
+                    onChange={e => setDeliveryPoint({
+                      ...delivery, address: { ...delivery.address, address2: e.target.value }
+                    })}
+                  />
+              </Grid>
             </Grid>
             <Grid item xs={12} className="mt-12 text-right">
               <Button
@@ -321,13 +374,12 @@ const RequestPage = ({ classes }) => {
                   transformAddress(collect.address)
                 ) : " - "}
               </Typography>
-              <Button className="mt-16" size="small" variant="contained" color="primary" onClick={() => resetCollect()}>
+              {collectDone && (
+                <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetCollect()}>
                   <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
                   Deletar
-              </Button>
-              {/* <Typography>
-                <span className="text-blue-A100 font-600">Detalhes: </span>
-              </Typography> */}
+                </Button>
+              )}
             </Grid>
             <Divider className="my-8" />
             <Grid item xs={12} className={"mt-8 p-4"}>
@@ -345,10 +397,12 @@ const RequestPage = ({ classes }) => {
                   transformAddress(delivery.address)
                 ) : " - "}
               </Typography>
-              <Button className="mt-16" size="small" variant="contained" color="primary" onClick={() => resetDelivery()}>
+              {deliveryDone && (
+                <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetDelivery()}>
                   <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
                   Deletar
-              </Button>
+                </Button>
+              )}
               {/* <Typography>
                 <span className="text-blue-A100 font-600">Detalhes: </span>
               </Typography> */}

@@ -14,6 +14,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlankOut
 import TableCustom from 'app/main/components/table/TableCustom';
 import { workOrdersTableConfig } from './workOrdersTableConfig';
 import Layout from 'app/main/components/layout/Layout';
+import clsx from 'clsx';
 import { firestore } from 'firebase';
 
 const styles = theme => ({
@@ -184,7 +185,7 @@ const WorkOrdersPage = ({ classes, history }) => {
             config={workOrdersTableConfig}
             filterChips={filterChips}
             showDateFilter={false}
-            onRowClick={(e, rowData) => console.log(rowData)}
+            onRowClick={(e, rowData) => history.push(`pedidos/${rowData.id}`)}
           />
         </Grid>
       </Grid>
