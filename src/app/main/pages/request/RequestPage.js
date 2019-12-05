@@ -16,11 +16,11 @@ import { transformAddressGoogle } from 'app/utils/ValidationUtil';
 import { transformAddress } from 'app/utils/TransformUtil';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faRoad } from '@fortawesome/free-solid-svg-icons';
-import { faClock, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import { faClock, faCheckCircle, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import ApiWorkOrders from 'app/api/ApiWorkOrder';
 import NumberUtil from 'app/utils/NumberUtil';
 import history from "@history";
-import MessageAlert from 'app/main/components/snackbar/MessageAlert';
+import './autoComplete.css';
 
 const styles = () => ({
   panelOppened: {
@@ -123,6 +123,30 @@ const RequestPage = ({ classes }) => {
     setCollectPoint({ ...collect, address: { ...address } })
   }
 
+  const resetCollect = () => {
+    setCollectPoint({
+      address: {
+        address2: ""
+      },
+      id: "xx1",
+      sequence: 1,
+      status: "PENDING"
+    })
+    setCollectDone(false)
+  }
+
+  const resetDelivery = () => {
+    setDeliveryPoint({
+      address: {
+        address2: ""
+      },
+      id: "xx2",
+      sequence: 2,
+      status: "PENDING"
+    })
+    setDeliveryDone(false)
+  }
+
   const getQuotation = async () => {
     setLoading(true)
     const options = {
@@ -192,7 +216,7 @@ const RequestPage = ({ classes }) => {
               <Script url={mapKey} onLoad={() => setScriptLoaded(true)} />
               {scriptLoaded && (
                 <Autocomplete
-                  className={classes.outlinedButton}
+                  className={clsx(classes.outlinedButton, "autoCompleteInput")}
                   name="collect"
                   placeholder="Endereço de Coleta"
                   disabled={collectDone}
@@ -237,7 +261,7 @@ const RequestPage = ({ classes }) => {
               <Script url={mapKey} onLoad={() => { setScriptLoaded(true) }} />
               {scriptLoaded && (
                 <Autocomplete
-                  className={classes.outlinedButton}
+                  className={clsx(classes.outlinedButton, "autoCompleteInput")}
                   name="delivery"
                   placeholder="Endereço de Entrega"
                   disabled={deliveryDone}
@@ -297,6 +321,10 @@ const RequestPage = ({ classes }) => {
                   transformAddress(collect.address)
                 ) : " - "}
               </Typography>
+              <Button className="mt-16" size="small" variant="contained" color="primary" onClick={() => resetCollect()}>
+                  <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
+                  Deletar
+              </Button>
               {/* <Typography>
                 <span className="text-blue-A100 font-600">Detalhes: </span>
               </Typography> */}
@@ -317,6 +345,10 @@ const RequestPage = ({ classes }) => {
                   transformAddress(delivery.address)
                 ) : " - "}
               </Typography>
+              <Button className="mt-16" size="small" variant="contained" color="primary" onClick={() => resetDelivery()}>
+                  <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
+                  Deletar
+              </Button>
               {/* <Typography>
                 <span className="text-blue-A100 font-600">Detalhes: </span>
               </Typography> */}
