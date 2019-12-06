@@ -22,8 +22,8 @@ const styles = theme => ({
 const variantIcon = {
   success: "check_circle",
   warning: "warning",
-  error  : "error_outline",
-  info   : "info"
+  error: "error_outline",
+  info: "info"
 };
 
 const variantStyles = {
@@ -40,7 +40,7 @@ const SlideTransition = (props) => {
 const MessageAlert = memo(({ classes }) => {
   const dispatch = useDispatch();
   const options = useSelector(({ ui }) => ui)
-  
+
   return (
     <Snackbar
       anchorOrigin={{
@@ -49,7 +49,7 @@ const MessageAlert = memo(({ classes }) => {
       }}
       TransitionComponent={SlideTransition}
       open={options.showDialog}
-      autoHideDuration={3000}
+      autoHideDuration={5000}
       onClose={() => dispatch(Actions.clearMessageDialog())}
     >
       <SnackbarContent

@@ -56,7 +56,7 @@ const styles = () => ({
   },
   buttonDelete: {
     background: "#FF5252",
-    '&:hover':{ 
+    '&:hover': {
       background: "#FF1744"
     }
   }
@@ -64,7 +64,8 @@ const styles = () => ({
 
 const RequestPage = ({ classes }) => {
   const dispatch = useDispatch()
-  const inputPlacesGoogle = useRef(null);
+  const autocompleteCollect = useRef();
+  const autocompleteDelivery = useRef();
   const { REACT_APP_MAP_KEY } = process.env;
   const user = JSON.parse(localStorage.getItem('user'))
   const mapKey = `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_MAP_KEY}
@@ -107,10 +108,16 @@ const RequestPage = ({ classes }) => {
     if (address.number === "" && address.address1.length > 0) {
       let pos = address.address1.length;
       let address1 = address.address1 + ", número";
-      let inputRef = inputPlacesGoogle.current.refs.input;
+      let inputRef = autocompleteDelivery.current.refs.input;
       selectNumber(inputRef, pos);
       inputRef.value = address1;
-      return
+    } else {
+      setDeliveryPoint({
+        ...delivery,
+        address: {
+          ...address
+        }
+      })
     }
 
     setDeliveryPoint({
@@ -127,16 +134,18 @@ const RequestPage = ({ classes }) => {
     if (address.number === "" && address.address1.length > 0) {
       let pos = address.address1.length;
       let address1 = address.address1 + ", número";
-      let inputRef = inputPlacesGoogle.current.refs.input;
+      let inputRef = autocompleteCollect.current.refs.input;
       selectNumber(inputRef, pos);
       inputRef.value = address1;
-      return
+    } else {
+      setCollectPoint({ ...collect, address: { ...address } })
     }
-
     setCollectPoint({ ...collect, address: { ...address } })
   }
 
   const resetCollect = () => {
+    let inputRef = autocompleteCollect.current.refs.input;
+    inputRef.value = ""
     setCollectPoint({
       address: {
         address2: ""
@@ -146,9 +155,12 @@ const RequestPage = ({ classes }) => {
       status: "PENDING"
     })
     setCollectDone(false)
+    setNoAddress2Collect(false)
   }
 
   const resetDelivery = () => {
+    let inputRef = autocompleteDelivery.current.refs.input;
+    inputRef.value = ""
     setDeliveryPoint({
       address: {
         address2: ""
@@ -158,6 +170,7 @@ const RequestPage = ({ classes }) => {
       status: "PENDING"
     })
     setDeliveryDone(false)
+    setNoAddress2Delivery(false)
   }
 
   const getQuotation = async () => {
@@ -213,6 +226,38 @@ const RequestPage = ({ classes }) => {
     }
   }
 
+  const handleConfirmCollect = () => {
+    if (collectDone) {
+      return true
+    }
+
+    if (collect.address.address1) {
+      if (!noAddress2Collect && collect.address.address2.length < 1) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
+    }
+  }
+
+  const handleConfirmDelivery = () => {
+    if (deliveryDone) {
+      return true
+    }
+
+    if (delivery.address.address1) {
+      if (!noAddress2Delivery && delivery.address.address2.length < 1) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
+    }
+  }
+
   return (
     <Layout>
       <Grid container justify="space-evenly" className="px-16 py-12">
@@ -220,7 +265,7 @@ const RequestPage = ({ classes }) => {
           <Typography variant="h5" className="font-600">Solicitar</Typography>
           <Divider className="mb-12" />
         </Grid>
-        <Grid container justify="flex-start">
+        <Grid container justify="space-evenly">
           <Grid item xs={4} className="px-12 py-24">
             <Grid item xs={12} className="mb-16">
               <Typography variant="h6">Coleta</Typography>
@@ -233,51 +278,54 @@ const RequestPage = ({ classes }) => {
                   name="collect"
                   placeholder="Endereço de Coleta"
                   disabled={collectDone}
-                  ref={inputPlacesGoogle}
+                  ref={autocompleteCollect}
                   onPlaceSelected={place => {
                     handleCollect(place);
                   }}
-                  types={"locality"}
+                  types={[]}
                   componentRestrictions={{ country: "br" }}
                 />
               )}
             </Grid>
             <Grid container justify="space-between" alignItems="center" className="mt-8">
-                <Grid item xs={5}>
-                  <FormControlLabel
-                      control={
-                        <Radio
-                        disabled={collectDone}
-                        icon={<CircleUnchecked />}
-                        checkedIcon={<CircleCheckedFilled />}
-                        color={"primary"}
-                        checked={noAddress2Collect}
-                        onClick={() => setNoAddress2Collect(!noAddress2Collect)}
-                      />
-                      }
-                      label={
-                        <Typography variant="body2">Sem Complemento</Typography>
-                      }
-                      labelPlacement="end"
-                    />   
-                </Grid>
-                <Grid item xs={7}>
-                  <TextField
-                    label="Complemento"
-                    fullWidth
-                    variant="outlined"
-                    disabled={noAddress2Collect}
-                    margin="dense"
-                    value={collect.address.address2}
-                    onChange={e => setCollectPoint({
-                      ...collect, address: { ...collect.address, address2: e.target.value }
-                    })}
-                  />
+              <Grid item xs={5}>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      disabled={collectDone}
+                      icon={<CircleUnchecked />}
+                      checkedIcon={<CircleCheckedFilled />}
+                      color={"primary"}
+                      checked={noAddress2Collect}
+                      onClick={() => {
+                        setCollectPoint({ address: { ...collect.address, address2: "" } });
+                        setNoAddress2Collect(!noAddress2Collect)
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">Sem Complemento</Typography>
+                  }
+                  labelPlacement="end"
+                />
+              </Grid>
+              <Grid item xs={7}>
+                <TextField
+                  label="Complemento"
+                  fullWidth
+                  variant="outlined"
+                  disabled={noAddress2Collect || collectDone}
+                  margin="dense"
+                  value={collect.address.address2}
+                  onChange={e => setCollectPoint({
+                    ...collect, address: { ...collect.address, address2: e.target.value }
+                  })}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} className="mt-12 text-right">
               <Button
-                disabled={!collect.address.address1 || collectDone}
+                disabled={handleConfirmCollect()}
                 size="small"
                 color="primary"
                 variant="contained"
@@ -298,51 +346,54 @@ const RequestPage = ({ classes }) => {
                   name="delivery"
                   placeholder="Endereço de Entrega"
                   disabled={deliveryDone}
-                  ref={inputPlacesGoogle}
+                  ref={autocompleteDelivery}
                   onPlaceSelected={(place) => {
                     handleDelivery(place);
                   }}
-                  types={"locality"}
+                  types={[]}
                   componentRestrictions={{ country: "br" }}
                 />
               )}
             </Grid>
             <Grid container justify="space-between" alignItems="center" className="mt-8">
-                <Grid item xs={5}>
-                  <FormControlLabel
-                      control={
-                        <Radio
-                        disabled={deliveryDone}
-                        icon={<CircleUnchecked />}
-                        checkedIcon={<CircleCheckedFilled />}
-                        color={"primary"}
-                        checked={noAddress2Delivery}
-                        onClick={() => setNoAddress2Delivery(!noAddress2Delivery)}
-                      />
-                      }
-                      label={
-                        <Typography variant="body2">Sem Complemento</Typography>
-                      }
-                      labelPlacement="end"
-                    />   
-                </Grid>
-                <Grid item xs={7}>
-                  <TextField
-                    label="Complemento"
-                    fullWidth
-                    variant="outlined"
-                    disabled={noAddress2Delivery}
-                    margin="dense"
-                    value={delivery.address.address2}
-                    onChange={e => setDeliveryPoint({
-                      ...delivery, address: { ...delivery.address, address2: e.target.value }
-                    })}
-                  />
+              <Grid item xs={5}>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      disabled={deliveryDone}
+                      icon={<CircleUnchecked />}
+                      checkedIcon={<CircleCheckedFilled />}
+                      color={"primary"}
+                      checked={noAddress2Delivery}
+                      onClick={() => {
+                        setDeliveryPoint({ address: { ...delivery.address, address2: "" } });
+                        setNoAddress2Delivery(!noAddress2Delivery);
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">Sem Complemento</Typography>
+                  }
+                  labelPlacement="end"
+                />
+              </Grid>
+              <Grid item xs={7}>
+                <TextField
+                  label="Complemento"
+                  fullWidth
+                  variant="outlined"
+                  disabled={noAddress2Delivery || deliveryDone}
+                  margin="dense"
+                  value={delivery.address.address2}
+                  onChange={e => setDeliveryPoint({
+                    ...delivery, address: { ...delivery.address, address2: e.target.value }
+                  })}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} className="mt-12 text-right">
               <Button
-                disabled={!delivery.address.address1 || deliveryDone}
+                disabled={handleConfirmDelivery()}
                 size="small"
                 color="primary"
                 variant="contained"
@@ -355,7 +406,7 @@ const RequestPage = ({ classes }) => {
           <Grid item xs={1} className="px-24">
             <div className={classes.separator} />
           </Grid>
-          <Grid item xs={4} className="px-12 py-24">
+          <Grid item xs={5} className="px-4 py-24">
             <Grid item xs={12} className="mb-16">
               <Typography variant="h6">Resumo do Pedido</Typography>
             </Grid>
