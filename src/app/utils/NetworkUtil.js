@@ -30,7 +30,6 @@ export function request(baseURL, method, url, config = {}, options = {}) {
         });
       })
       .catch(error => {
-        console.log("NetWork", error);
         reject(error);
       });
   });

@@ -6,7 +6,7 @@ const initialState = {
   user: {
     uid: "",
     role: "admin",
-    displayName: "Lucas Lima",
+    displayName: " - ",
     email: "",
     profilePic: ""
   },

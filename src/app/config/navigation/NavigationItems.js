@@ -5,6 +5,9 @@ import { faMotorcycle, faList } from '@fortawesome/free-solid-svg-icons';
 
 const navMenus = [
   {
+    'type': 'divider'
+  },
+  {
     'id': 'request',
     'title': 'Solicitar',
     'type': 'item',

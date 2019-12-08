@@ -10,7 +10,6 @@ const ui = function (state = initialState, action) {
   switch (action.type) {
     case Actions.SHOW_MESSAGE: {
       const dialogOptions = action.payload
-      console.log(dialogOptions)
       return {
         ...state,
         showDialog: true,

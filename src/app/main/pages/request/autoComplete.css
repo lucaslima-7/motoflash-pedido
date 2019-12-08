@@ -1,7 +1,7 @@
 .pac-container {
-  border-bottom: 2px solid #80D8FF;
-  border-right: 2px solid #80D8FF;
-  border-left: 2px solid #80D8FF;
+  border-bottom: 2px solid #9413f3;
+  border-right: 2px solid #9413f3;
+  border-left: 2px solid #9413f3;
   border-bottom-left-radius: 2%;
   border-bottom-right-radius: 2%;
   /* margin-left: 20px; */
@@ -21,14 +21,14 @@
     padding-bottom: 5px;
 }
 .pac-item:hover {
-  background: #82B1FF;
-  color: #fff !important;
+  background: #9413f3;
+  color: #181818 !important;
 }
 .pac-item:hover .pac-item-query{
-    color:#fff
+    color:#181818
 }
 .pac-item-query {
-  color: #80D8FF;
+  color: #9413f3;
 }
 /* .pac-item-query {
   color: #ef3f40;
@@ -50,5 +50,5 @@
 
 .autoCompleteInput :first-child:focus {
   padding: 200px;
-  border: 2px solid #80D8FF !important;
+  border: 2px solid #9413f3 !important;
 }

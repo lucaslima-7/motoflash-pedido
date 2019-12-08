@@ -15,7 +15,7 @@ const ToolbarLayout = ({ showBackButton }) => {
               variant="contained"
               color="primary"
               size="small"
-              className="float-left shadow-none"
+              className="float-left shadow-none captalize"
               onClick={() => history.push(showBackButton)}
             >
               <FontAwesomeIcon icon={faChevronLeft} className="mr-12" />

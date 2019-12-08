@@ -9,7 +9,11 @@ import {
   Button,
   Divider,
   Radio,
-  FormControlLabel
+  FormControlLabel,
+  ListItem,
+  ListItemText,
+  Checkbox,
+  Paper
 } from "@material-ui/core";
 import Autocomplete from "react-google-autocomplete";
 import Script from "react-load-script";
@@ -75,6 +79,7 @@ const RequestPage = ({ classes }) => {
     address: {
       address2: ""
     },
+    type: "bike",
     id: "xx1",
     sequence: 1,
     status: "PENDING"
@@ -84,6 +89,7 @@ const RequestPage = ({ classes }) => {
     address: {
       address2: ""
     },
+    type: "bike",
     id: "xx2",
     sequence: 2,
     status: "PENDING"
@@ -150,6 +156,7 @@ const RequestPage = ({ classes }) => {
       address: {
         address2: ""
       },
+      type: "bike",
       id: "xx1",
       sequence: 1,
       status: "PENDING"
@@ -165,6 +172,7 @@ const RequestPage = ({ classes }) => {
       address: {
         address2: ""
       },
+      type: "bike",
       id: "xx2",
       sequence: 2,
       status: "PENDING"
@@ -260,282 +268,339 @@ const RequestPage = ({ classes }) => {
 
   return (
     <Layout>
-      <Grid container justify="space-evenly" className="px-16 py-12">
-        <Grid item xs={12}>
-          <Typography variant="h5" className="font-600">Solicitar</Typography>
+      <Grid container justify="flex-start" className="px-16 py-12">
+        <Grid item xs={12} className="px-24">
+          <Typography variant="h5" color="primary" className="font-900">Nova Solicitação</Typography>
           <Divider className="mb-12" />
         </Grid>
-        <Grid container justify="space-evenly">
-          <Grid item xs={4} className="px-12 py-24">
-            <Grid item xs={12} className="mb-16">
-              <Typography variant="h6">Coleta</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Script url={mapKey} onLoad={() => setScriptLoaded(true)} />
-              {scriptLoaded && (
-                <Autocomplete
-                  className={clsx(classes.outlinedButton, "autoCompleteInput")}
-                  name="collect"
-                  placeholder="Endereço de Coleta"
-                  disabled={collectDone}
-                  ref={autocompleteCollect}
-                  onPlaceSelected={place => {
-                    handleCollect(place);
-                  }}
-                  types={[]}
-                  componentRestrictions={{ country: "br" }}
-                />
-              )}
-            </Grid>
-            <Grid container justify="space-between" alignItems="center" className="mt-8">
-              <Grid item xs={5}>
-                <FormControlLabel
-                  control={
-                    <Radio
-                      disabled={collectDone}
-                      icon={<CircleUnchecked />}
-                      checkedIcon={<CircleCheckedFilled />}
-                      color={"primary"}
-                      checked={noAddress2Collect}
-                      onClick={() => {
-                        setCollectPoint({ address: { ...collect.address, address2: "" } });
-                        setNoAddress2Collect(!noAddress2Collect)
-                      }}
-                    />
-                  }
-                  label={
-                    <Typography variant="body2">Sem Complemento</Typography>
-                  }
-                  labelPlacement="end"
-                />
+        <Grid container justify="flex-start" className="px-24 pt-16">
+          <Grid item xs={5}>
+            <Paper className="shadow-lighter p-20">
+              <Grid item xs={12} className="mb-16">
+                <Typography variant="h6">Coleta</Typography>
               </Grid>
-              <Grid item xs={7}>
-                <TextField
-                  label="Complemento"
-                  fullWidth
-                  variant="outlined"
-                  disabled={noAddress2Collect || collectDone}
-                  margin="dense"
-                  value={collect.address.address2}
-                  onChange={e => setCollectPoint({
-                    ...collect, address: { ...collect.address, address2: e.target.value }
-                  })}
-                />
+              <Grid item xs={12}>
+                <Script url={mapKey} onLoad={() => setScriptLoaded(true)} />
+                {scriptLoaded && (
+                  <Autocomplete
+                    className={clsx(classes.outlinedButton, "autoCompleteInput")}
+                    name="collect"
+                    placeholder="Endereço de Coleta"
+                    disabled={collectDone}
+                    ref={autocompleteCollect}
+                    onPlaceSelected={place => {
+                      handleCollect(place);
+                    }}
+                    types={[]}
+                    componentRestrictions={{ country: "br" }}
+                  />
+                )}
               </Grid>
-            </Grid>
-            <Grid item xs={12} className="mt-12 text-right">
-              <Button
-                disabled={handleConfirmCollect()}
-                size="small"
-                color="primary"
-                variant="contained"
-                onClick={() => setCollectDone(true)}
-              >
-                Confirmar Coleta
-             </Button>
-            </Grid>
+              <Grid container justify="space-between" alignItems="center" className="mt-8">
+                <Grid item xs={5}>
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        disabled={collectDone}
+                        icon={<CircleUnchecked />}
+                        checkedIcon={<CircleCheckedFilled />}
+                        color={"primary"}
+                        checked={noAddress2Collect}
+                        onClick={() => {
+                          setCollectPoint({ ...collect, address: { ...collect.address, address2: "" } });
+                          setNoAddress2Collect(!noAddress2Collect)
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography variant="body2">Sem Complemento</Typography>
+                    }
+                    labelPlacement="end"
+                  />
+                </Grid>
+                <Grid item xs={7}>
+                  <TextField
+                    label="Complemento"
+                    fullWidth
+                    variant="outlined"
+                    disabled={noAddress2Collect || collectDone}
+                    margin="dense"
+                    value={collect.address.address2}
+                    onChange={e => setCollectPoint({
+                      ...collect, address: { ...collect.address, address2: e.target.value }
+                    })}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <ListItem className={clsx('list-item px-0 pt-4')}>
+                  <ListItemText className="ml-4" primary={"Modo de Entrega"} classes={{ primary: 'font-700 text-14 list-item-text-primary' }} />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={collect.type === "bike"}
+                        color={"primary"}
+                        onClick={() => setCollectPoint({ ...collect, type: "bike" })}
+                      />
+                    }
+                    label={"Bicicleta"}
+                    labelPlacement="end"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={collect.type === "moto"}
+                        color={"primary"}
+                        onClick={() => setCollectPoint({ ...collect, type: "moto" })}
+                      />
+                    }
+                    label={"Moto"}
+                    labelPlacement="end"
+                  />
+                </ListItem>
+              </Grid>
+              <Grid item xs={12} className="mt-12 text-right">
+                <Button
+                  disabled={handleConfirmCollect()}
+                  size="small"
+                  color="primary"
+                  variant="contained"
+                  onClick={() => setCollectDone(true)}
+                >
+                  Confirmar Coleta
+                </Button>
+              </Grid>
+            </Paper>
             <Divider className="my-16" />
-            <Grid item xs={12} className="mb-16">
-              <Typography variant="h6">Entrega</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Script url={mapKey} onLoad={() => { setScriptLoaded(true) }} />
-              {scriptLoaded && (
-                <Autocomplete
-                  className={clsx(classes.outlinedButton, "autoCompleteInput")}
-                  name="delivery"
-                  placeholder="Endereço de Entrega"
-                  disabled={deliveryDone}
-                  ref={autocompleteDelivery}
-                  onPlaceSelected={(place) => {
-                    handleDelivery(place);
-                  }}
-                  types={[]}
-                  componentRestrictions={{ country: "br" }}
-                />
-              )}
-            </Grid>
-            <Grid container justify="space-between" alignItems="center" className="mt-8">
-              <Grid item xs={5}>
-                <FormControlLabel
-                  control={
-                    <Radio
-                      disabled={deliveryDone}
-                      icon={<CircleUnchecked />}
-                      checkedIcon={<CircleCheckedFilled />}
-                      color={"primary"}
-                      checked={noAddress2Delivery}
-                      onClick={() => {
-                        setDeliveryPoint({ address: { ...delivery.address, address2: "" } });
-                        setNoAddress2Delivery(!noAddress2Delivery);
-                      }}
-                    />
-                  }
-                  label={
-                    <Typography variant="body2">Sem Complemento</Typography>
-                  }
-                  labelPlacement="end"
-                />
+            <Paper className="shadow-lighter p-20">
+              <Grid item xs={12} className="mb-16">
+                <Typography variant="h6">Entrega</Typography>
               </Grid>
-              <Grid item xs={7}>
-                <TextField
-                  label="Complemento"
-                  fullWidth
-                  variant="outlined"
-                  disabled={noAddress2Delivery || deliveryDone}
-                  margin="dense"
-                  value={delivery.address.address2}
-                  onChange={e => setDeliveryPoint({
-                    ...delivery, address: { ...delivery.address, address2: e.target.value }
-                  })}
-                />
+              <Grid item xs={12}>
+                <Script url={mapKey} onLoad={() => { setScriptLoaded(true) }} />
+                {scriptLoaded && (
+                  <Autocomplete
+                    className={clsx(classes.outlinedButton, "autoCompleteInput")}
+                    name="delivery"
+                    placeholder="Endereço de Entrega"
+                    disabled={deliveryDone}
+                    ref={autocompleteDelivery}
+                    onPlaceSelected={(place) => {
+                      handleDelivery(place);
+                    }}
+                    types={[]}
+                    componentRestrictions={{ country: "br" }}
+                  />
+                )}
               </Grid>
-            </Grid>
-            <Grid item xs={12} className="mt-12 text-right">
-              <Button
-                disabled={handleConfirmDelivery()}
-                size="small"
-                color="primary"
-                variant="contained"
-                onClick={() => setDeliveryDone(true)}
-              >
-                Confirmar Entrega
+              <Grid container justify="space-between" alignItems="center" className="mt-8">
+                <Grid item xs={5}>
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        disabled={deliveryDone}
+                        icon={<CircleUnchecked />}
+                        checkedIcon={<CircleCheckedFilled />}
+                        color={"primary"}
+                        checked={noAddress2Delivery}
+                        onClick={() => {
+                          setDeliveryPoint({ ...delivery, address: { ...delivery.address, address2: "" } });
+                          setNoAddress2Delivery(!noAddress2Delivery);
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography variant="body2">Sem Complemento</Typography>
+                    }
+                    labelPlacement="end"
+                  />
+                </Grid>
+                <Grid item xs={7}>
+                  <TextField
+                    label="Complemento"
+                    fullWidth
+                    variant="outlined"
+                    disabled={noAddress2Delivery || deliveryDone}
+                    margin="dense"
+                    value={delivery.address.address2}
+                    onChange={e => setDeliveryPoint({
+                      ...delivery, address: { ...delivery.address, address2: e.target.value }
+                    })}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <ListItem className={clsx('list-item px-0 pt-4')}>
+                  <ListItemText className="ml-4" primary={"Modo de Entrega"} classes={{ primary: 'font-700 text-14 list-item-text-primary' }} />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={delivery.type === "bike"}
+                        color={"primary"}
+                        onClick={() => setCollectPoint({ ...delivery, type: "bike" })}
+                      />
+                    }
+                    label={"Bicicleta"}
+                    labelPlacement="end"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={delivery.type === "moto"}
+                        color={"primary"}
+                        onClick={() => setDeliveryPoint({ ...delivery, type: "moto" })}
+                      />
+                    }
+                    label={"Moto"}
+                    labelPlacement="end"
+                  />
+                </ListItem>
+              </Grid>
+              <Grid item xs={12} className="mt-12 text-right">
+                <Button
+                  disabled={handleConfirmDelivery()}
+                  size="small"
+                  color="primary"
+                  variant="contained"
+                  onClick={() => setDeliveryDone(true)}
+                >
+                  Confirmar Entrega
              </Button>
-            </Grid>
+              </Grid>
+            </Paper>
           </Grid>
-          <Grid item xs={1} className="px-24">
-            <div className={classes.separator} />
-          </Grid>
-          <Grid item xs={5} className="px-4 py-24">
-            <Grid item xs={12} className="mb-16">
-              <Typography variant="h6">Resumo do Pedido</Typography>
-            </Grid>
-            <Grid item xs={12} className={"mt-8 p-4"}>
-              <Typography variant="h6" className="font-700">
-                Coleta
+          <Grid item xs={5} className="ml-40">
+            <Paper className="shadow-lighter p-20">
+              <Grid item xs={12} className="mb-16">
+                <Typography variant="h6">Resumo do Pedido</Typography>
+              </Grid>
+              <Grid item xs={12} className={"mt-8 p-4"}>
+                <Typography variant="h6" className="font-700">
+                  Coleta
                 {collectDone && (
-                  <span className={"float-right"}>
-                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-A700 text-20" />
-                  </span>
-                )}
-              </Typography>
-              <Typography>
-                <span className="text-blue-A100 font-600">Local: </span>
-                {collectDone ? (
-                  transformAddress(collect.address)
-                ) : " - "}
-              </Typography>
-              {collectDone && (
-                <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetCollect()}>
-                  <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
-                  Deletar
+                    <span className={"float-right"}>
+                      <FontAwesomeIcon icon={faCheckCircle} className="text-green-A700 text-20" />
+                    </span>
+                  )}
+                </Typography>
+                <Typography>
+                  <span className="font-600">Local: </span>
+                  {collectDone ? (
+                    transformAddress(collect.address)
+                  ) : " - "}
+                </Typography>
+                {collectDone && (
+                  <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetCollect()}>
+                    <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
+                    Deletar
                 </Button>
-              )}
-            </Grid>
-            <Divider className="my-8" />
-            <Grid item xs={12} className={"mt-8 p-4"}>
-              <Typography variant="h6" className="font-700">
-                Entrega
+                )}
+              </Grid>
+              <Divider className="my-8" />
+              <Grid item xs={12} className={"mt-8 p-4"}>
+                <Typography variant="h6" className="font-700">
+                  Entrega
                 {deliveryDone && (
-                  <span className={"float-right"}>
-                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-A700 text-20" />
-                  </span>
-                )}
-              </Typography>
-              <Typography>
-                <span className="text-blue-A100 font-600">Local: </span>
-                {deliveryDone ? (
-                  transformAddress(delivery.address)
-                ) : " - "}
-              </Typography>
-              {deliveryDone && (
-                <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetDelivery()}>
-                  <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
-                  Deletar
+                    <span className={"float-right"}>
+                      <FontAwesomeIcon icon={faCheckCircle} className="text-green-A700 text-20" />
+                    </span>
+                  )}
+                </Typography>
+                <Typography>
+                  <span className="font-600">Local: </span>
+                  {deliveryDone ? (
+                    transformAddress(delivery.address)
+                  ) : " - "}
+                </Typography>
+                {deliveryDone && (
+                  <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetDelivery()}>
+                    <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
+                    Deletar
                 </Button>
-              )}
-              {/* <Typography>
+                )}
+                {/* <Typography>
                 <span className="text-blue-A100 font-600">Detalhes: </span>
               </Typography> */}
-            </Grid>
-            {quotation ? (
-              <>
-                <Grid item xs={12} className="px-12 mt-36 text-center">
-                  <Grid container>
-                    <Grid item xs={12} sm={4}>
-                      <Grid container alignItems="center">
-                        <Grid item xs={12}>
-                          <FontAwesomeIcon icon={faCoins} className="text-32 mb-4" />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography color="primary" className="font-semibold">
-                            Preço
+              </Grid>
+              {quotation ? (
+                <>
+                  <Grid item xs={12} className="px-12 mt-36 text-center">
+                    <Grid container>
+                      <Grid item xs={12} sm={4}>
+                        <Grid container alignItems="center">
+                          <Grid item xs={12}>
+                            <FontAwesomeIcon icon={faCoins} className="text-32 mb-4" />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography color="primary" className="font-semibold">
+                              Preço
                           </Typography>
-                          <Typography variant="body1" className="font-700">
-                            {`${NumberUtil.getDoubleAsCurrency(quotation.price)}`}
-                          </Typography>
+                            <Typography variant="body1" className="font-700">
+                              {`${NumberUtil.getDoubleAsCurrency(quotation.price)}`}
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Grid container alignItems="center">
-                        <Grid item xs={12}>
-                          <FontAwesomeIcon icon={faClock} className="text-32 mb-4" />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography color="primary" className="font-semibold">
-                            Tempo
+                      <Grid item xs={12} sm={4}>
+                        <Grid container alignItems="center">
+                          <Grid item xs={12}>
+                            <FontAwesomeIcon icon={faClock} className="text-32 mb-4" />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography color="primary" className="font-semibold">
+                              Tempo
                           </Typography>
-                          <Typography variant="body1" className="font-700">
-                            {NumberUtil.secondsToMinutes(quotation.duration)}
-                          </Typography>
+                            <Typography variant="body1" className="font-700">
+                              {NumberUtil.secondsToMinutes(quotation.duration)}
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Grid container alignItems="center">
-                        <Grid item xs={12}>
-                          <FontAwesomeIcon icon={faRoad} className="text-32 mb-4" />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography color="primary" className="font-semibold">
-                            Distância
+                      <Grid item xs={12} sm={4}>
+                        <Grid container alignItems="center">
+                          <Grid item xs={12}>
+                            <FontAwesomeIcon icon={faRoad} className="text-32 mb-4" />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography color="primary" className="font-semibold">
+                              Distância
                               </Typography>
-                          <Typography variant="body1" className="font-700">
-                            {NumberUtil.metersToKm(quotation.distance)}
-                          </Typography>
+                            <Typography variant="body1" className="font-700">
+                              {NumberUtil.metersToKm(quotation.distance)}
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item xs={12} className="mt-12 text-right">
-                  <Button
-                    size="small"
-                    color="primary"
-                    variant="contained"
-                    onClick={() => addWorkOrder()}
-                  >
-                    Confirmar Pedido
-                  </Button>
-                </Grid>
-              </>
-            ) : (
-                <Grid item xs={12} className="text-center mt-24">
-                  {(collectDone && deliveryDone) && (
+                  <Grid item xs={12} className="mt-24 text-right">
                     <Button
-                      disabled={loading}
-                      fullWidth
-                      size="large"
+                      size="small"
                       color="primary"
                       variant="contained"
-                      onClick={() => getQuotation()}
+                      onClick={() => addWorkOrder()}
                     >
-                      {loading ? "Calculando..." : "Calcular"}
-                    </Button>
-                  )}
-                </Grid>
-              )}
+                      Confirmar Pedido
+                  </Button>
+                  </Grid>
+                </>
+              ) : (
+                  <Grid item xs={12} className="text-center mt-24">
+                    {(collectDone && deliveryDone) && (
+                      <Button
+                        disabled={loading}
+                        fullWidth
+                        size="large"
+                        color="primary"
+                        variant="contained"
+                        onClick={() => getQuotation()}
+                      >
+                        {loading ? "Calculando..." : "Calcular"}
+                      </Button>
+                    )}
+                  </Grid>
+                )}
+            </Paper>
           </Grid>
         </Grid>
       </Grid>

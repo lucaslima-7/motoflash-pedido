@@ -4,6 +4,7 @@ import * as Actions from "app/store/actions";
 import { AppBar, IconButton } from '@material-ui/core';
 import clsx from 'clsx';
 import Navigation from './Navigation';
+import UserNavbarHeader from './UserNavbarHeader';
 import navMenus from "app/config/navigation/NavigationItems";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -24,22 +25,29 @@ const NavbarLayout = (props) => {
       className={clsx("flex flex-col overflow-hidden h-full", props.className)}
     >
       <AppBar
-        color="inherit"
+        style={{ background: "#FFF" }}
         position="static"
         elevation={0}
         className="flex flex-row items-center flex-shrink h-64 min-h-64 pr-12"
       >
+
         <div className="flex flex-1 pr-8">
-          {/* Motoflash Logo */}
+          {!folded && (
+            <img className="w-160" src={"/assets/images/logos/MOTOFLASH_5.svg"} alt="Logo" />
+          )}
         </div>
+
         <IconButton
           className={"w-40 h-40 p-0"}
           onClick={() => { dispatch(Actions.foldNavbar(true)) }}
-          color="inherit"
+          color="primary"
         >
           <FontAwesomeIcon icon={folded ? faChevronRight : faChevronLeft} className="text-14" />
         </IconButton>
       </AppBar>
+      {!folded && (
+        <UserNavbarHeader />
+      )}
       <Navigation navigation={navMenus} />
     </div>
   );

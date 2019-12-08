@@ -19,7 +19,7 @@ const Navigation = (props) => {
             )}
 
             {item.type === 'divider' && (
-              <Divider className="my-16" />
+              <Divider className="my-4" />
             )}
           </React.Fragment>
         ))

@@ -5,7 +5,7 @@ import NavbarLayout from './NavbarLayout';
 import { useSelector } from 'react-redux';
 import defaultTheme from 'app/config/themes/defaultTheme';
 
-const navbarWidth = 180;
+const navbarWidth = 240;
 
 const styles = theme => ({
   wrapper: {
@@ -31,8 +31,7 @@ const styles = theme => ({
     width: navbarWidth,
     minWidth: navbarWidth,
     height: '100%',
-    background: `linear-gradient(
-      to bottom, 25% ${defaultTheme.palette.primary.light}, 100% ${defaultTheme.palette.primary.main})`,
+    background: `linear-gradient(to left, 25% ${defaultTheme.palette.primary.light}, 100% ${defaultTheme.palette.primary.main})`,
     zIndex: 4,
     left: 0,
     transition: theme.transitions.create(['width', 'min-width'], {

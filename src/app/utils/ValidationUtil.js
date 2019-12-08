@@ -1,7 +1,6 @@
 import NumberUtil from "./NumberUtil";
 
 export function transformAddressGoogle(place) {
-    console.log(place)
     let address1 = "";
     let number = "";
     let address2 = "";
@@ -91,7 +90,7 @@ export function isValidZipCode(zipCode) {
 }
 
 export function isNotBlank(text) {
-    return text && text.length > 0
+    return text && text.length >= 3
 }
 
 export function isFullName(string) {
@@ -99,7 +98,7 @@ export function isFullName(string) {
 }
 
 export function isValidPassword(password) {
-    return password.length >= 8
+    return password.length >= 6
 }
 
 export function isValidDate(date) {

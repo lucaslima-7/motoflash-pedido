@@ -64,7 +64,7 @@ const WorkOrdersPage = ({ classes, history }) => {
       if (last[page - 1]) {
         temp = last[page - 1]
       }
-      const countRef = db.collection("workorders").where("userId", "==", user ? user.uid: '').orderBy("createdDate").startAfter(temp).limit(limit)
+      const countRef = db.collection("workorders").where("userId", "==", user ? user.uid : '').orderBy("createdDate").startAfter(temp).limit(limit)
       const snapshot = await countRef.get()
       last[page] = snapshot.docs[snapshot.docs.length - 1]
       first[page] = snapshot.docs[0]
@@ -94,10 +94,9 @@ const WorkOrdersPage = ({ classes, history }) => {
   }
 
   const getAllWorkOrdersCount = async () => {
-    const workOrdersCollection = db.collection("workorders").where("userId", "==", user ? user.uid: "")
+    const workOrdersCollection = db.collection("workorders").where("userId", "==", user ? user.uid : "")
     const snap = await workOrdersCollection.get()
     count = snap.docs.map(doc => doc.data()).length
-    console.log(count)
   }
 
   const handleType = query => {
@@ -151,14 +150,10 @@ const WorkOrdersPage = ({ classes, history }) => {
 
   return (
     <Layout>
-      <Grid container justify="center">
-        <Grid item xs={12} className={"px-24 py-4"}>
-          <Typography className={"text-left mt-12 font-900"} variant={"h4"}>
-            Meus Pedidos
-          </Typography>
-        </Grid>
-        <Grid item xs={12} className={"mb-24 mx-12"}>
-          <Divider />
+      <Grid container justify="center" className="px-16 py-12">
+        <Grid item xs={12} className="px-24">
+          <Typography variant="h5" color="primary" className="font-900">Meus Pedidos</Typography>
+          <Divider className="mb-12" />
         </Grid>
         <Grid item xs={12} className="px-12">
           {/* <Grid item xs={12} className="mb-12">

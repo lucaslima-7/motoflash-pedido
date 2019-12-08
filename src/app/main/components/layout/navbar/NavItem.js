@@ -6,14 +6,15 @@ import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import includes from 'lodash/includes';
+import defaultTheme from 'app/config/themes/defaultTheme';
 
 const useStyles = makeStyles(theme => ({
   item: {
     height: 40,
     paddingRight: 12,
     '&.active': {
-      backgroundColor: "#80D8FF70",
-      borderRight: `6px ${theme.palette.secondary.main} solid`,
+      background: "#2bf4ff40",
+      borderLeft: `6px ${theme.palette.secondary.main} solid`,
       color: theme.palette.secondary.contrastText + '!important',
       pointerEvents: 'none',
       transition: 'border-radius .15s cubic-bezier(0.4,0.0,0.2,1)',

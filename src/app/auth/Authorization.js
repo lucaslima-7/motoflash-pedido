@@ -16,7 +16,6 @@ class Authorization extends Component {
 
     firebaseService.onAuthStateChanged(authUser => {
       if (authUser) {
-        console.log(authUser)
         const user = {
           uid: authUser.uid,
           role: "admin",

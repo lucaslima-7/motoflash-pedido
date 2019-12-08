@@ -15,6 +15,7 @@ const styles = theme => ({
   },
   message: {
     display: 'flex',
+    fontWeight: 900,
     alignItems: 'center',
   },
 });
@@ -27,10 +28,10 @@ const variantIcon = {
 };
 
 const variantStyles = {
-  success: "text-green-900 bg-green-100",
-  error: "text-red-900 bg-red-100",
-  info: "text-blue-900 bg-blue-100",
-  warning: "text-yellow-900 bg-yellow-100",
+  success: "text-green-900 bg-green-A200",
+  error: "text-red-900 bg-red-A200",
+  info: "text-blue-900 bg-blue-A200",
+  warning: "text-yellow-900 bg-yellow-A200",
 }
 
 const SlideTransition = (props) => {

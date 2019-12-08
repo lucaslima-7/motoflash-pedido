@@ -56,7 +56,6 @@ export function setLongFromDate(value) {
 
 export function getLongFromDate(value) {
   const date = new Date(value).getTime()
-  console.log(date)
   return date
 }
 

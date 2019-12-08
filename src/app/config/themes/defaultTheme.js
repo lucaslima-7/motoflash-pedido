@@ -23,17 +23,17 @@ const defaultTheme = {
   },
   palette: {
     type: "light",
-    primary: {
-      light: "#E3F2FD",
-      main: "#82B1FF",
-      dark: "#2979FF",
-      contrastText: "#212121"
-    },
     secondary: {
-      light: "#B3E5FC",
-      main: "#80D8FF",
-      dark: "#0091EA",
-      contrastText: "#212121"
+      light: "#69f7ff",
+      main: "#2bf4ff",
+      dark: "#00f2ff",
+      contrastText: "#181818"
+    },
+    primary: {
+      light: "#be67ff",
+      main: "#9413f3",
+      dark: "#9200ff",
+      contrastText: "#FFF"
     }
   }
 }
