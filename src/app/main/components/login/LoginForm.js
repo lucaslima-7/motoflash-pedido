@@ -16,7 +16,6 @@ import { formatAuthError } from "app/utils/FirebaseErrors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { faChevronRight, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import firebaseService from "app/config/firebase/index";
 import clsx from 'clsx';
 import { auth } from 'firebase';
 

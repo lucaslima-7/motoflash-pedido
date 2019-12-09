@@ -20,10 +20,20 @@ const ChipStatus = ({ classes, status }) => {
     switch (status) {
       case 'PENDING':
         return "text-blue-900 bg-blue-A100"
+      case 'STARTED':
+        return "text-yellow-900 bg-yellow-A100"
       case 'CANCELLED':
         return "text-red-900 bg-red-A100"
+      case 'CHECKED_OUT':
+        return "text-teal-900 bg-teal-A100"
       case 'ASSIGNED':
         return "text-teal-900 bg-teal-A100"
+      case 'EXECUTION':
+        return "text-orange-900 bg-orange-A100"
+      case 'FINISHED':
+        return "text-green-900 bg-green-A100"
+      case 'PAY':
+        return "text-green-900 bg-green-A100"
       case 'ACTIVE':
         return "text-red-900 bg-red-A100"
       case 'INACTIVE':

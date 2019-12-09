@@ -104,7 +104,7 @@ const WorkOrdersDetailsPage = ({ classes, match: { params } }) => {
             <Paper className="shadow-lighter p-20">
               <Grid container justify={"center"}>
                 <Grid item xs={12}>
-                  <Typography variant="h6">Pontos</Typography>
+                  <Typography color="primary" variant="h6">Pontos</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Divider />

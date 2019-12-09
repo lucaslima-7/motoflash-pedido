@@ -79,7 +79,6 @@ const RequestPage = ({ classes }) => {
     address: {
       address2: ""
     },
-    type: "bike",
     id: "xx1",
     sequence: 1,
     status: "PENDING"
@@ -89,7 +88,6 @@ const RequestPage = ({ classes }) => {
     address: {
       address2: ""
     },
-    type: "bike",
     id: "xx2",
     sequence: 2,
     status: "PENDING"
@@ -99,6 +97,7 @@ const RequestPage = ({ classes }) => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [noAddress2Collect, setNoAddress2Collect] = useState(false);
   const [noAddress2Delivery, setNoAddress2Delivery] = useState(false);
+  const [motoboy, setMotoboy] = useState(true)
 
   const selectNumber = (input, pos) => {
     dispatch(Actions.showMessageDialog('warning', 'Informe o número!'))
@@ -156,7 +155,6 @@ const RequestPage = ({ classes }) => {
       address: {
         address2: ""
       },
-      type: "bike",
       id: "xx1",
       sequence: 1,
       status: "PENDING"
@@ -172,7 +170,6 @@ const RequestPage = ({ classes }) => {
       address: {
         address2: ""
       },
-      type: "bike",
       id: "xx2",
       sequence: 2,
       status: "PENDING"
@@ -210,6 +207,7 @@ const RequestPage = ({ classes }) => {
     const options = {
       workOrder: {
         userId: user.uid,
+        motoboy,
         quotation: {
           ...quotation
         },
@@ -332,39 +330,13 @@ const RequestPage = ({ classes }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <ListItem className={clsx('list-item px-0 pt-4')}>
-                  <ListItemText className="ml-4" primary={"Modo de Entrega"} classes={{ primary: 'font-700 text-14 list-item-text-primary' }} />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={collect.type === "bike"}
-                        color={"primary"}
-                        onClick={() => setCollectPoint({ ...collect, type: "bike" })}
-                      />
-                    }
-                    label={"Bicicleta"}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={collect.type === "moto"}
-                        color={"primary"}
-                        onClick={() => setCollectPoint({ ...collect, type: "moto" })}
-                      />
-                    }
-                    label={"Moto"}
-                    labelPlacement="end"
-                  />
-                </ListItem>
-              </Grid>
               <Grid item xs={12} className="mt-12 text-right">
                 <Button
                   disabled={handleConfirmCollect()}
                   size="small"
                   color="primary"
                   variant="contained"
+                  className="capitalize"
                   onClick={() => setCollectDone(true)}
                 >
                   Confirmar Coleta
@@ -429,39 +401,13 @@ const RequestPage = ({ classes }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <ListItem className={clsx('list-item px-0 pt-4')}>
-                  <ListItemText className="ml-4" primary={"Modo de Entrega"} classes={{ primary: 'font-700 text-14 list-item-text-primary' }} />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={delivery.type === "bike"}
-                        color={"primary"}
-                        onClick={() => setCollectPoint({ ...delivery, type: "bike" })}
-                      />
-                    }
-                    label={"Bicicleta"}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={delivery.type === "moto"}
-                        color={"primary"}
-                        onClick={() => setDeliveryPoint({ ...delivery, type: "moto" })}
-                      />
-                    }
-                    label={"Moto"}
-                    labelPlacement="end"
-                  />
-                </ListItem>
-              </Grid>
               <Grid item xs={12} className="mt-12 text-right">
                 <Button
                   disabled={handleConfirmDelivery()}
                   size="small"
                   color="primary"
                   variant="contained"
+                  className="capitalize"
                   onClick={() => setDeliveryDone(true)}
                 >
                   Confirmar Entrega
@@ -490,7 +436,7 @@ const RequestPage = ({ classes }) => {
                   ) : " - "}
                 </Typography>
                 {collectDone && (
-                  <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetCollect()}>
+                  <Button className={clsx(classes.buttonDelete, "capitalize mt-16")} size="small" variant="contained" onClick={() => resetCollect()}>
                     <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
                     Deletar
                 </Button>
@@ -513,7 +459,7 @@ const RequestPage = ({ classes }) => {
                   ) : " - "}
                 </Typography>
                 {deliveryDone && (
-                  <Button className={clsx(classes.buttonDelete, "mt-16")} size="small" variant="contained" onClick={() => resetDelivery()}>
+                  <Button className={clsx(classes.buttonDelete, "capitalize mt-16")} size="small" variant="contained" onClick={() => resetDelivery()}>
                     <FontAwesomeIcon icon={faTimesCircle} className={"mr-12"} />
                     Deletar
                 </Button>
@@ -573,15 +519,44 @@ const RequestPage = ({ classes }) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} className="mt-24 text-right">
+                  <Grid item xs={12} className="mt-8">
+                    <ListItem className={clsx('list-item px-0 pt-4')}>
+                      <ListItemText className="ml-4" primary={"Modo de Entrega"} classes={{ primary: 'font-700 text-14 list-item-text-primary' }} />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={motoboy}
+                            color={"primary"}
+                            onClick={() => setMotoboy(true)}
+                          />
+                        }
+                        label={"Moto"}
+                        labelPlacement="end"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={!motoboy}
+                            color={"primary"}
+                            onClick={() => setMotoboy(!motoboy)}
+                          />
+                        }
+                        label={"Bicicleta"}
+                        labelPlacement="end"
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid item xs={12} className="mt-16 text-right">
                     <Button
+                      disabled={loading}
                       size="small"
                       color="primary"
                       variant="contained"
+                      className="capitalize"
                       onClick={() => addWorkOrder()}
                     >
-                      Confirmar Pedido
-                  </Button>
+                      {loading ? "Aguarde..." : "Confirmar Pedido"}
+                    </Button>
                   </Grid>
                 </>
               ) : (
@@ -592,6 +567,7 @@ const RequestPage = ({ classes }) => {
                         fullWidth
                         size="large"
                         color="primary"
+                        className="capitalize"
                         variant="contained"
                         onClick={() => getQuotation()}
                       >
